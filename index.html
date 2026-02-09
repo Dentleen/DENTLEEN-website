@@ -23,7 +23,7 @@
         body { font-family: 'Tajawal', sans-serif; background-color: #1f1f1f; color: #e0e0e0; overflow-x: hidden; }
         
         .product-card { background-color: #2a2a2a; border: 1px solid #374151; transition: all 0.3s ease; }
-        .product-card:hover { transform: translateY(-8px); box-shadow: 0 10px 20px rgba(45, 212, 191, 0.2); border-color: #2dd4bf; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(45, 212, 191, 0.2); border-color: #2dd4bf; }
         
         .full-page-view {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
@@ -86,7 +86,6 @@
             
             <div class="flex items-center gap-4">
                 <img src="logo.png" alt="Dentleen" class="h-10 w-auto cursor-pointer hover:opacity-80 transition" onclick="window.showMainView()">
-                <!-- User Status Area (Points show here) -->
                 <div id="user-status-area" class="hidden md:flex items-center gap-3"></div>
             </div>
 
@@ -138,9 +137,15 @@
                 <button onclick="window.showMainView()" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-bold">العودة</button>
             </div>
 
+            <!-- Search Bar -->
+            <div class="mb-6 relative">
+                <input type="text" id="admin-search" onkeyup="window.searchUsers()" placeholder="ابحث بالاسم أو رقم الهاتف..." class="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-5 py-3 pl-10 focus:border-teal-500 outline-none shadow-md">
+                <i class="fas fa-search absolute left-4 top-4 text-gray-500"></i>
+            </div>
+
             <div class="bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-700">
                 <div class="p-6 border-b border-gray-700 flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-white">العملاء</h2>
+                    <h2 class="text-xl font-bold text-white">قائمة العملاء</h2>
                     <span class="bg-teal-900 text-teal-300 px-3 py-1 rounded-full text-sm" id="total-users-count">--</span>
                 </div>
                 <div class="overflow-x-auto">
@@ -149,9 +154,9 @@
                             <tr>
                                 <th>الاسم</th>
                                 <th>الهاتف</th>
-                                <th>تاريخ التسجيل</th>
+                                <th>العنوان</th>
                                 <th>النقاط</th>
-                                <th>تعديل الرصيد</th>
+                                <th>إجراءات</th>
                             </tr>
                         </thead>
                         <tbody id="admin-users-list"></tbody>
@@ -177,7 +182,7 @@
                     <!-- Promo Text: Hidden when logged in -->
                     <p id="hero-promo-text" class="text-lg text-gray-400 mb-8 transition-opacity duration-500">
                         سجل دخولك الآن واجمع النقاط مع كل طلب! <br>
-                        <span class="text-yellow-500 font-bold">كل 100 جنيه = 50 نقطة</span>
+                        <span class="text-yellow-500 font-bold">نقاط ولاء حقيقية لكل 1 جنيه</span>
                     </p>
                     <div class="flex flex-wrap gap-4 justify-center md:justify-start">
                         <a href="#products" class="bg-teal-500 hover:bg-teal-600 text-white px-8 py-3 rounded-full font-bold shadow-lg transition transform hover:scale-105">تصفح المنتجات</a>
@@ -192,7 +197,7 @@
         <!-- Products -->
         <section id="products" class="py-16 container mx-auto px-4">
             <h2 class="text-3xl font-bold text-teal-400 mb-8 border-b border-gray-700 pb-4">المنتجات</h2>
-            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+            <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8"></div>
         </section>
 
         <!-- Offers -->
@@ -212,13 +217,11 @@
                         <div id="auth-inline-container"></div>
                     </div>
                     
-                    <!-- Quick Add Dropdown -->
                     <div class="mb-6">
                         <label class="block text-sm text-gray-400 mb-2">إضافة منتج للسلة سريعاً:</label>
                         <div class="flex gap-2">
                             <select id="quick-product-select" class="flex-1 bg-gray-800 text-white border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-teal-500">
                                 <option value="">اختر المنتج...</option>
-                                <!-- Populated by JS -->
                             </select>
                             <button onclick="window.addFromDropdown()" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-bold">
                                 <i class="fas fa-plus"></i>
@@ -236,7 +239,7 @@
                                 </div>
                             </div>
                             <button id="redeem-btn" onclick="window.handleRedeemPoints()" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition">
-                                خصم 20 جنيه
+                                خصم 25 جنيه
                             </button>
                         </div>
                         <div id="redeem-msg" class="text-sm mt-2 text-green-400 hidden font-bold text-center bg-green-900/20 p-2 rounded"></div>
@@ -257,15 +260,16 @@
                         </div>
                     </div>
                     
-                    <!-- NEW POINTS INFO -->
                     <div class="bg-blue-900/30 p-3 rounded-lg mt-4 mb-8 text-center border border-blue-900/50">
                         <p class="text-blue-200 text-sm">نقاط جديدة مستحقة من هذا الطلب: <span id="potential-points" class="font-bold text-white text-lg">0</span> (تضاف يدوياً)</p>
                     </div>
 
-                    <div id="guest-info" class="hidden space-y-3 bg-gray-700/50 p-4 rounded-xl border border-gray-600 mb-4 mt-4">
-                        <p class="text-sm text-yellow-300 font-bold">يرجى إدخال بياناتك:</p>
-                        <input type="text" id="checkout-name" placeholder="الاسم" class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white">
-                        <input type="tel" id="checkout-phone" placeholder="الموبايل (11 رقم)" maxlength="11" class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white">
+                    <!-- Shipping Info Section -->
+                    <div id="shipping-info" class="space-y-3 bg-gray-700/50 p-4 rounded-xl border border-gray-600 mb-4 mt-4">
+                        <p class="text-sm text-yellow-300 font-bold mb-2">بيانات التوصيل (يمكنك تعديلها):</p>
+                        <input type="text" id="checkout-name" placeholder="الاسم بالكامل" class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:border-teal-500 outline-none">
+                        <input type="tel" id="checkout-phone" placeholder="رقم الهاتف (11 رقم)" maxlength="11" class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:border-teal-500 outline-none">
+                        <input type="text" id="checkout-address" placeholder="العنوان بالتفصيل (المحافظة - المدينة - الشارع)" class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:border-teal-500 outline-none">
                     </div>
 
                     <button id="init-checkout-btn" onclick="window.initiateCheckout()" class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold text-xl shadow-lg transition mt-6">
@@ -288,9 +292,6 @@
                 <div class="space-y-6">
                     <div class="bg-gray-800 rounded-3xl p-6 flex items-center justify-center shadow-2xl min-h-[300px]">
                         <img id="fp-image" src="" class="w-full max-h-[400px] object-contain">
-                    </div>
-                    <div id="fp-video-container" class="hidden bg-black rounded-2xl overflow-hidden aspect-video">
-                        <iframe id="fp-video-frame" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
                     </div>
                 </div>
                 <div class="bg-gray-800/50 p-6 rounded-3xl border border-gray-700">
@@ -317,6 +318,7 @@
             <form id="auth-form" class="space-y-4">
                 <input type="text" id="auth-name" placeholder="الاسم" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white">
                 <input type="tel" id="auth-phone" placeholder="الموبايل (11 رقم)" maxlength="11" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white">
+                <input type="text" id="auth-address" placeholder="العنوان بالتفصيل" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white">
                 <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-lg">دخول</button>
             </form>
         </div>
@@ -326,7 +328,6 @@
     <div id="confirmation-modal" class="modal-overlay fixed inset-0 z-[4000] hidden flex items-center justify-center bg-black/90 backdrop-blur-sm px-4">
         <div class="bg-gradient-to-br from-gray-900 to-gray-800 border-2 border-teal-600 p-8 rounded-3xl max-w-md w-full relative shadow-2xl transform scale-100 transition-all">
             <button onclick="window.closeConfirmModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
-            
             <div class="text-center mb-6">
                 <div class="bg-teal-900/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-teal-500">
                     <i class="fas fa-check text-3xl text-teal-400"></i>
@@ -334,16 +335,11 @@
                 <h2 class="text-2xl font-bold text-white mb-2">تأكيد الطلب</h2>
                 <p class="text-gray-400 text-sm">هل أنت متأكد من إرسال هذا الطلب؟</p>
             </div>
-
-            <div class="bg-gray-800/50 rounded-xl p-4 mb-6 border border-gray-700 max-h-40 overflow-y-auto custom-scrollbar" id="confirm-items-list">
-                <!-- Items will be injected here -->
-            </div>
-
+            <div class="bg-gray-800/50 rounded-xl p-4 mb-6 border border-gray-700 max-h-40 overflow-y-auto custom-scrollbar" id="confirm-items-list"></div>
             <div class="flex justify-between items-center mb-6 bg-gray-800 p-3 rounded-lg">
                 <span class="text-gray-400">الإجمالي النهائي:</span>
                 <span id="confirm-total-price" class="text-xl font-bold text-teal-400">0 ج.م</span>
             </div>
-            
             <div class="flex gap-3">
                 <button onclick="window.closeConfirmModal()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-xl transition">تراجع</button>
                 <button onclick="window.confirmOrder()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2">
@@ -358,7 +354,7 @@
     <!-- App Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -384,41 +380,41 @@
         const WHATSAPP_NUMBER = "201508259538"; 
         const ADMIN_PHONE = "01010681114";
         const PRODUCTS_DATA = [
-            { id: 'p3', name: 'Caries Detector Dye Gel', price: 125, img: 'cdd2.jpg', video: '', desc: 'جل كاشف للتسوس (3 جم).', type: 'product' },
-            { id: 'p1', name: 'SDF 1ml', price: 400, img: 'sdf.png', video: '', desc: 'Silver Diamine Fluoride 1ml.', type: 'product' },
-            { id: 'p2', name: 'SDF 4ml', price: 1190, img: 'sdf.png', video: '', desc: 'SDF 4ml Value Pack.', type: 'product' },
-            { id: 'p4', name: 'Caries Detector Dye Liquid', price: 225, img: 'cdd.jpg', video: '', desc: 'سائل كاشف للتسوس 4 مل.', type: 'product' },
-            { id: 'p5', name: 'MTA 0.25 gm', price: 50, img: 'mta.jpg', video: '', desc: 'MTA 0.25g.', type: 'product' },
-            { id: 'p7', name: 'D-Seal 12 gm', price: 395, img: 'd-seal12.png', video: '', desc: 'D-Seal Resin Sealer Automix.', type: 'product' },
-            { id: 'p8', name: 'D-Seal 8 gm', price: 300, img: 'd-seal 8.PNG', video: '', desc: 'D-Seal Manual Mix.', type: 'product' },
-            { id: 'p9', name: 'D-Seal 20 gm', price: 495, img: 'D-Seal20.JPG', video: '', desc: 'D-Seal Economy Pack.', type: 'product' },
-            { id: 'p10', name: 'Edta 5 gm', price: 170, img: 'edta.png', video: '', desc: 'EDTA Gel 5g.', type: 'product' },
-            { id: 'p11', name: 'Etch 5 gm', price: 50, img: 'etch.jpg', video: '', desc: 'Etch 37%.', type: 'product' },
-            { id: 'p12', name: 'Porcelain Acid Etch', price: 170, img: 'porclean.png', video: '', desc: 'Hydrofluoric Acid.', type: 'product' },
-            { id: 'p13', name: 'HEMOSTATIC LIQUID', price: 135, img: 'beld-of.png', video: '', desc: 'سائل وقف النزيف.', type: 'product' },
-            { id: 'p14', name: 'ROOT HEAL', price: 110, img: 'root heal.png', video: '', desc: 'Intracanal Medicament.', type: 'product' },
-            { id: 'p15', name: 'HOLDENT 20 gm', price: 155, img: 'hole.PNG', video: '', desc: 'كريم تثبيت أطقم.', type: 'product' },
-            { id: 'o1', name: 'باكدج التوفير الشامل', price: 260, img: 'bakedg.png', video: '', desc: 'Etch, Edta, MTA, Resin Sealer, Caries Detector.', type: 'offer' },
-            { id: 'o2', name: 'Offer 1: Endo Basic', price: 370, img: 'file.png', video: '', desc: 'D-seal 8g + File Mani #10.', type: 'offer' },
-            { id: 'o3', name: 'Offer 2: Fiber Post Kit', price: 320, img: 'ever x .png', video: '', desc: 'Caries dye + Ever X.', type: 'offer' },
-            { id: 'o4', name: 'Offer 3: Bonding Master', price: 620, img: 'bond.png', video: '', desc: 'Caries dye + Etch + Bond Bisco.', type: 'offer' },
-            { id: 'o5', name: 'Offer 4: Tokuyama Special', price: 1300, img: 'tok.png', video: '', desc: 'D-seal 20g + Syringe Tokuyama.', type: 'offer' },
-            { id: 'o6', name: 'Offer 5: Gutta Percha Deal', price: 550, img: 'guta.png', video: '', desc: 'D-seal 20g + Gutta Percha.', type: 'offer' },
-            { id: 'o7', name: 'Offer 6: Ever X + Sealer', price: 400, img: 'Ever x capsule.png', video: '', desc: 'Ever X + D-seal 8g.', type: 'offer' }
+            { id: 'p3', name: 'Caries Detector Dye Gel', price: 160, img: 'cdd2.jpg', desc: 'جل كاشف للتسوس (3 جم).', type: 'product' },
+            { id: 'p1', name: 'SDF 1ml', price: 400, img: 'sdf.png', desc: 'Silver Diamine Fluoride 1ml.', type: 'product' },
+            { id: 'p2', name: 'SDF 4ml', price: 1190, img: 'sdf.png', desc: 'SDF 4ml Value Pack.', type: 'product' },
+            { id: 'p4', name: 'Caries Detector Dye Liquid', price: 225, img: 'cdd.jpg', desc: 'سائل كاشف للتسوس 4 مل.', type: 'product' },
+            { id: 'p5', name: 'MTA 0.25 gm', price: 50, img: 'mta.jpg', desc: 'MTA 0.25g.', type: 'product' },
+            { id: 'p7', name: 'D-Seal 12 gm', price: 395, img: 'd-seal12.png', desc: 'D-Seal Resin Sealer Automix.', type: 'product' },
+            { id: 'p8', name: 'D-Seal 8 gm', price: 300, img: 'd-seal 8.PNG', desc: 'D-Seal Manual Mix.', type: 'product' },
+            { id: 'p9', name: 'D-Seal 20 gm', price: 495, img: 'D-Seal20.JPG', desc: 'D-Seal Economy Pack.', type: 'product' },
+            { id: 'p10', name: 'Edta 5 gm', price: 170, img: 'edta.png', desc: 'EDTA Gel 5g.', type: 'product' },
+            { id: 'p11', name: 'Etch 5 gm', price: 50, img: 'etch.jpg', desc: 'Etch 37%.', type: 'product' },
+            { id: 'p12', name: 'Porcelain Acid Etch', price: 170, img: 'porclean.png', desc: 'Hydrofluoric Acid.', type: 'product' },
+            { id: 'p13', name: 'HEMOSTATIC LIQUID', price: 135, img: 'beld-of.png', desc: 'سائل وقف النزيف.', type: 'product' },
+            { id: 'p14', name: 'ROOT HEAL', price: 110, img: 'root heal.png', desc: 'Intracanal Medicament.', type: 'product' },
+            { id: 'p15', name: 'HOLDENT 20 gm', price: 155, img: 'hole.PNG', desc: 'كريم تثبيت أطقم.', type: 'product' },
+            { id: 'o1', name: 'باكدج التوفير الشامل', price: 260, img: 'bakedg.png', desc: 'Etch, Edta, MTA, Resin Sealer, Caries Detector.', type: 'offer' },
+            { id: 'o2', name: 'Offer 1: Endo Basic', price: 370, img: 'file.png', desc: 'D-seal 8g + File Mani #10.', type: 'offer' },
+            { id: 'o3', name: 'Offer 2: Fiber Post Kit', price: 320, img: 'ever x .png', desc: 'Caries dye + Ever X.', type: 'offer' },
+            { id: 'o4', name: 'Offer 3: Bonding Master', price: 620, img: 'bond.png', desc: 'Caries dye + Etch + Bond Bisco.', type: 'offer' },
+            { id: 'o5', name: 'Offer 4: Tokuyama Special', price: 1300, img: 'tok.png', desc: 'D-seal 20g + Syringe Tokuyama.', type: 'offer' },
+            { id: 'o6', name: 'Offer 5: Gutta Percha Deal', price: 550, img: 'guta.png', desc: 'D-seal 20g + Gutta Percha.', type: 'offer' },
+            { id: 'o7', name: 'Offer 6: Ever X + Sealer', price: 400, img: 'Ever x capsule.png', desc: 'Ever X + D-seal 8g.', type: 'offer' }
         ];
 
         let cart = JSON.parse(localStorage.getItem('dentleen_cart')) || [];
         let currentUser = null;
-        let isRedeeming = false; // Changed from pointsRedeemedValue to boolean flag
+        let isRedeeming = false; 
         let currentViewingProduct = null;
         let adminUnsubscribe = null;
+        let allUsersData = [];
 
         // Helpers Expose
         window.showMainView = () => {
             document.getElementById('product-full-view').classList.remove('active');
             document.getElementById('admin-view').classList.add('hidden');
             document.getElementById('main-view').classList.remove('hidden');
-            document.getElementById('fp-video-frame').src = "";
             if(adminUnsubscribe) { adminUnsubscribe(); adminUnsubscribe = null; }
         };
         
@@ -431,10 +427,6 @@
             document.getElementById('fp-image').src = product.img;
             document.getElementById('fp-desc').textContent = product.desc;
             document.getElementById('fp-quantity').value = 1;
-            const videoFrame = document.getElementById('fp-video-frame');
-            const videoContainer = document.getElementById('fp-video-container');
-            if(product.video) { videoContainer.classList.remove('hidden'); videoFrame.src = product.video; }
-            else { videoContainer.classList.add('hidden'); videoFrame.src = ""; }
             document.getElementById('product-full-view').classList.add('active');
         };
 
@@ -493,7 +485,7 @@
             
             if(cart.length === 0) {
                 container.innerHTML = '<p class="text-center text-gray-500 py-4">السلة فارغة</p>';
-                isRedeeming = false; // Reset if empty
+                isRedeeming = false; 
             } else {
                 cart.forEach(item => {
                     subtotal += item.price * item.quantity;
@@ -522,25 +514,22 @@
             const redeemBtn = document.getElementById('redeem-btn');
             const redeemMsg = document.getElementById('redeem-msg');
 
-            // Calculate Discount
             let discount = 0;
             if (isRedeeming && currentUser && currentUser.points >= 50 && subtotal > 0) {
-                const maxDiscountFromPoints = Math.floor(currentUser.points / 50) * 20;
+                // UPDATE: 50 points = 25 EGP
+                const maxDiscountFromPoints = Math.floor(currentUser.points / 50) * 25;
                 discount = Math.min(maxDiscountFromPoints, subtotal);
             }
 
-            // Update Potential Points Text
             const earnedPoints = Math.floor(subtotal * 0.5);
             document.getElementById('potential-points').textContent = earnedPoints;
 
-            // Update Discount UI
             if (discount > 0) {
                 discountRow.classList.remove('hidden');
                 cartDiscountEl.textContent = discount;
                 const finalTotal = subtotal - discount;
                 totalEl.innerHTML = `<span class="line-through text-gray-500 text-lg ml-2">${subtotal} ج.م</span> <span class="text-green-400">${finalTotal} ج.م</span>`;
                 
-                // Update Button State
                 if(redeemBtn) {
                     redeemBtn.textContent = "إلغاء الخصم";
                     redeemBtn.classList.remove('bg-yellow-600');
@@ -554,12 +543,11 @@
                 discountRow.classList.add('hidden');
                 totalEl.textContent = subtotal + ' ج.م';
                 
-                // Reset Button State
                 if(redeemBtn) {
                     redeemBtn.classList.remove('bg-red-600');
                     redeemBtn.classList.add('bg-yellow-600');
                     if(currentUser && currentUser.points >= 50) {
-                        redeemBtn.textContent = "استخدام النقاط للخصم";
+                        redeemBtn.textContent = "خصم 25 جنيه";
                     } else {
                         redeemBtn.textContent = "خصم (نقاط غير كافية)";
                     }
@@ -572,8 +560,11 @@
             e.preventDefault();
             const name = document.getElementById('auth-name').value.trim();
             const phone = document.getElementById('auth-phone').value.trim();
+            const address = document.getElementById('auth-address').value.trim();
+
             if(phone.length !== 11) { alert('رقم الهاتف يجب أن يكون 11 رقم'); return; }
             if(!name) { alert('الاسم مطلوب'); return; }
+            if(!address) { alert('العنوان مطلوب'); return; }
 
             window.showLoading(true);
             window.toggleAuthModal();
@@ -593,9 +584,14 @@
                 const snap = await getDoc(userRef);
                 if(snap.exists()) {
                     currentUser = snap.data();
+                    // Update address if changed
+                    if (currentUser.address !== address) {
+                        await updateDoc(userRef, { address: address });
+                        currentUser.address = address;
+                    }
                     alert(`مرحباً ${currentUser.name}`);
                 } else {
-                    const newUser = { name, phone, points: 50, role: 'user', joined: new Date().toLocaleDateString('ar-EG') };
+                    const newUser = { name, phone, address, points: 50, role: 'user', joined: new Date().toLocaleDateString('ar-EG') };
                     await setDoc(userRef, newUser);
                     currentUser = newUser;
                     alert('تم التسجيل بنجاح! رصيدك 50 نقطة.');
@@ -605,7 +601,7 @@
                 updateUserUI();
             } catch(err) {
                 console.error(err);
-                currentUser = { name, phone, points: 50, role: 'user' }; // Offline fallback
+                currentUser = { name, phone, address, points: 50, role: 'user' }; 
                 updateUserUI();
                 alert('تم الدخول (وضع غير متصل)');
             }
@@ -621,18 +617,15 @@
         window.initiateCheckout = () => {
             if(cart.length===0) return alert('السلة فارغة');
             
-            // Validation
-            if(!currentUser) {
-                const name = document.getElementById('checkout-name').value;
-                const phone = document.getElementById('checkout-phone').value;
-                document.getElementById('guest-info').classList.remove('hidden');
-                if(!name || phone.length !== 11) {
-                    alert('أدخل بياناتك أولاً');
-                    return;
-                }
+            const name = document.getElementById('checkout-name').value.trim();
+            const phone = document.getElementById('checkout-phone').value.trim();
+            const address = document.getElementById('checkout-address').value.trim();
+
+            if(!name || phone.length !== 11 || !address) { 
+                alert('يرجى التأكد من ملء جميع البيانات (الاسم، الهاتف 11 رقم، العنوان).'); 
+                return; 
             }
 
-            // Populate Modal
             const list = document.getElementById('confirm-items-list');
             list.innerHTML = '';
             let subtotal = 0;
@@ -640,74 +633,85 @@
                 subtotal += i.price * i.quantity;
                 list.innerHTML += `<div class="flex justify-between text-gray-300 border-b border-gray-700 pb-2 mb-2"><span>${i.name} (x${i.quantity})</span><span>${i.price*i.quantity} ج.م</span></div>`;
             });
-            
             let discount = 0;
             if (isRedeeming && currentUser && currentUser.points >= 50) {
-                const maxPointsDiscount = Math.floor(currentUser.points / 50) * 20;
+                // UPDATE: 50 points = 25 EGP
+                const maxPointsDiscount = Math.floor(currentUser.points / 50) * 25;
                 discount = Math.min(maxPointsDiscount, subtotal);
             }
-            
             const total = subtotal - discount;
-            
             const totalEl = document.getElementById('confirm-total-price');
-            if(discount > 0) {
-                totalEl.innerHTML = `<span class="line-through text-gray-500 text-sm ml-2">${subtotal}</span> ${total} ج.م`;
-            } else {
-                totalEl.textContent = total + " ج.م";
-            }
-
+            if(discount > 0) { totalEl.innerHTML = `<span class="line-through text-gray-500 text-sm ml-2">${subtotal}</span> ${total} ج.م`; }
+            else { totalEl.textContent = total + " ج.م"; }
             document.getElementById('confirmation-modal').classList.remove('hidden');
         };
 
-        window.closeConfirmModal = () => {
-            document.getElementById('confirmation-modal').classList.add('hidden');
-        };
+        window.closeConfirmModal = () => { document.getElementById('confirmation-modal').classList.add('hidden'); };
 
         window.confirmOrder = async () => {
             window.closeConfirmModal();
             window.showLoading(true);
-
-            let name = "", phone = "";
-            if(currentUser) {
-                name = currentUser.name; phone = currentUser.phone;
-            } else {
-                name = document.getElementById('checkout-name').value;
-                phone = document.getElementById('checkout-phone').value;
-            }
+            
+            const name = document.getElementById('checkout-name').value;
+            const phone = document.getElementById('checkout-phone').value;
+            const address = document.getElementById('checkout-address').value;
 
             let subtotal = 0; cart.forEach(i => subtotal += i.price * i.quantity);
-            
             let discount = 0;
             if (isRedeeming && currentUser && currentUser.points >= 50) {
-                const maxPointsDiscount = Math.floor(currentUser.points / 50) * 20;
+                const maxPointsDiscount = Math.floor(currentUser.points / 50) * 25;
                 discount = Math.min(maxPointsDiscount, subtotal);
             }
-
             const total = subtotal - discount;
-            const pointsUsed = (discount/20)*50;
-            const earnedPoints = Math.floor(subtotal * 0.5); // Calculate for message
-
-            let msg = `*طلب جديد* 🦷%0Aاسم: ${name}%0Aهاتف: ${phone}%0A`;
-            msg += `-----------------------------%0A`;
-            cart.forEach(i => msg += `${i.name} (عدد ${i.quantity}) - ${i.price*i.quantity} ج.م%0A`);
-            msg += `-----------------------------%0A`;
-            msg += `المجموع: ${subtotal} ج.م%0A`;
-            if(discount > 0) msg += `خصم نقاط: -${discount} ج.م%0A`;
-            msg += `*الصافي:* ${total} ج.م%0A`;
-            msg += `-----------------------------%0A`;
-            msg += `*نقاط مستحقة عن هذا الطلب:* ${earnedPoints} نقطة (تضاف يدوياً)%0A`;
-            if (currentUser && currentUser.role !== 'admin') {
-                msg += `*رصيد النقاط الحالي للعميل:* ${currentUser.points} نقطة%0A`;
+            const pointsUsed = (discount/25)*50;
+            const earnedPoints = Math.floor(subtotal * 0.5);
+            
+            // تنسيق الرسالة الجديد والمحسن
+            let msg = `*طلب جديد من الموقع* 🦷\n`;
+            msg += `━━━━━━━━━━━━\n`;
+            msg += `*👤 بيانات العميل*\n`;
+            msg += `الاسم: ${name}\n`;
+            msg += `الهاتف: ${phone}\n`;
+            if(address) msg += `العنوان: ${address}\n`;
+            msg += `━━━━━━━━━━━━\n`;
+            msg += `*🛒 المنتجات*\n`;
+            cart.forEach(i => {
+                msg += `▪️ ${i.name}\n   العدد: ${i.quantity} | السعر: ${i.price * i.quantity} ج.م\n`; 
+            });
+            msg += `━━━━━━━━━━━━\n`;
+            msg += `*💰 الحساب*\n`;
+            msg += `المجموع: ${subtotal} ج.م\n`;
+            
+            if(discount > 0) {
+                msg += `خصم نقاط: -${discount} ج.م\n`;
+            }
+            
+            msg += `*الإجمالي النهائي: ${total} ج.م*\n`;
+            msg += `━━━━━━━━━━━━\n`;
+            msg += `*⭐ نقاط الولاء*\n`;
+            msg += `مستحقة: ${earnedPoints} نقطة\n`;
+            
+            if (currentUser && currentUser.role !== 'admin') { 
+                let newPointsBalance = currentUser.points - pointsUsed;
+                msg += `الرصيد: ${currentUser.points} ➡️ ${newPointsBalance}\n`; 
             }
             
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 
-            // ONLY deduct points used, DO NOT add new points
-            if(currentUser && db && currentUser.role !== 'admin' && pointsUsed > 0) {
-                const newPts = currentUser.points - pointsUsed;
-                try { await updateDoc(doc(db, USERS_COLLECTION, currentUser.phone), { points: newPts }); } catch(e){}
+            if(currentUser && db && currentUser.role !== 'admin') {
+                try { 
+                    // Deduct points if used
+                    if(pointsUsed > 0) {
+                        const newPts = currentUser.points - pointsUsed;
+                        await updateDoc(doc(db, USERS_COLLECTION, currentUser.phone), { points: newPts });
+                    }
+                    // Update Address if changed during checkout
+                    if(currentUser.address !== address) {
+                        await updateDoc(doc(db, USERS_COLLECTION, currentUser.phone), { address: address });
+                        currentUser.address = address; // Update local state
+                    }
+                } catch(e){}
             }
-            
             cart = []; localStorage.removeItem('dentleen_cart');
             isRedeeming = false;
             updateCartUI();
@@ -728,25 +732,66 @@
             document.getElementById('mobile-menu').classList.add('hidden');
             
             if(db) {
-                onSnapshot(collection(db, USERS_COLLECTION), (snap) => {
-                    const list = document.getElementById('admin-users-list');
-                    list.innerHTML = '';
-                    let count = 0;
+                if(adminUnsubscribe) adminUnsubscribe();
+                adminUnsubscribe = onSnapshot(collection(db, USERS_COLLECTION), (snap) => {
+                    allUsersData = []; 
                     snap.forEach(d => {
                         const u = d.data();
-                        if(u.role === 'admin') return;
-                        count++;
-                        list.innerHTML += `<tr class="border-b border-gray-700"><td>${u.name}</td><td>${u.phone}</td><td>${u.joined}</td><td class="text-yellow-400">${u.points}</td><td>
-                            <div class="flex gap-2 justify-end">
-                                <input type="number" id="pts-${u.phone}" class="w-16 bg-gray-700 text-white rounded px-1 text-sm" placeholder="0">
-                                <button onclick="window.modifyPoints('${u.phone}')" class="bg-blue-600 px-2 rounded text-xs text-white">تحديث</button>
-                            </div>
-                        </td></tr>`;
+                        if(u.role !== 'admin') {
+                            u.docId = d.id; 
+                            allUsersData.push(u);
+                        }
                     });
-                    document.getElementById('total-users-count').textContent = count + ' عميل';
+                    renderAdminTable(allUsersData);
                 });
             } else {
                 document.getElementById('total-users-count').textContent = "خطأ في الاتصال";
+            }
+        };
+
+        function renderAdminTable(users) {
+            const list = document.getElementById('admin-users-list');
+            list.innerHTML = '';
+            document.getElementById('total-users-count').textContent = users.length + ' عميل';
+            users.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-gray-700 hover:bg-gray-700/50 transition";
+                tr.innerHTML = `
+                    <td>${u.name}</td>
+                    <td>${u.phone}</td>
+                    <td>${u.address || '-'}</td>
+                    <td class="text-yellow-400 font-bold">${u.points}</td>
+                    <td>
+                        <div class="flex gap-2 justify-end">
+                            <input type="number" id="pts-${u.phone}" class="w-16 bg-gray-700 text-white rounded px-1 text-sm" placeholder="0">
+                            <button onclick="window.modifyPoints('${u.phone}')" class="bg-blue-600 px-2 rounded text-xs text-white">تحديث</button>
+                            <button onclick="window.deleteUser('${u.docId}')" class="bg-red-600 px-2 rounded text-xs text-white" title="حذف العميل"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+                list.appendChild(tr);
+            });
+        }
+
+        window.searchUsers = () => {
+            const term = document.getElementById('admin-search').value.toLowerCase();
+            const filtered = allUsersData.filter(u => 
+                (u.name && u.name.toLowerCase().includes(term)) || 
+                (u.phone && u.phone.includes(term))
+            );
+            renderAdminTable(filtered);
+        };
+
+        window.deleteUser = async (docId) => {
+            if(confirm('تحذير: هل أنت متأكد تماماً من حذف هذا العميل؟')) {
+                if(!db) return;
+                try {
+                    await deleteDoc(doc(db, USERS_COLLECTION, docId));
+                    alert('تم حذف العميل بنجاح');
+                } catch(e) {
+                    console.error(e);
+                    alert('حدث خطأ أثناء الحذف');
+                }
             }
         };
 
@@ -773,6 +818,7 @@
                 userListener = onSnapshot(doc(db, USERS_COLLECTION, phone), (s) => {
                     if(s.exists()) {
                         currentUser.points = s.data().points;
+                        currentUser.address = s.data().address || currentUser.address; // Keep address sync
                         updateUserUI();
                     }
                 });
@@ -789,23 +835,26 @@
             const heroText = document.getElementById('hero-promo-text');
             const statusArea = document.getElementById('user-status-area');
             
+            // Populate Checkout Fields
+            const checkoutName = document.getElementById('checkout-name');
+            const checkoutPhone = document.getElementById('checkout-phone');
+            const checkoutAddress = document.getElementById('checkout-address');
+
             if(currentUser) {
                 // LOGGED IN
-                heroText.classList.add('opacity-0'); // Hide promo text
-                
+                heroText.classList.add('opacity-0');
                 wrapper.innerHTML = `<button onclick="window.logout()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold text-sm">خروج</button>`;
                 mLogin.classList.add('hidden');
                 mLogout.classList.remove('hidden');
                 
-                // Show points badge in header
+                // Pre-fill checkout if user role
                 if(currentUser.role !== 'admin') {
-                    statusArea.innerHTML = `
-                        <div class="points-badge">
-                            <i class="fas fa-star text-yellow-600"></i>
-                            <span>${currentUser.points || 0}</span>
-                        </div>
-                    `;
+                    statusArea.innerHTML = `<div class="points-badge"><i class="fas fa-star text-yellow-600"></i><span>${currentUser.points || 0}</span></div>`;
                     statusArea.classList.remove('hidden');
+                    
+                    if(checkoutName) checkoutName.value = currentUser.name || '';
+                    if(checkoutPhone) checkoutPhone.value = currentUser.phone || '';
+                    if(checkoutAddress) checkoutAddress.value = currentUser.address || '';
                 } else {
                     statusArea.classList.add('hidden');
                 }
@@ -817,36 +866,33 @@
                 } else {
                     loyalty.classList.remove('hidden');
                     document.getElementById('user-points-display').textContent = currentUser.points;
-                    
                     const btn = document.getElementById('redeem-btn');
-                    if(currentUser.points >= 50) {
-                        btn.disabled = false; btn.classList.remove('opacity-50');
-                    } else {
-                        btn.disabled = true; btn.classList.add('opacity-50');
-                    }
+                    if(currentUser.points >= 50) { btn.disabled = false; btn.classList.remove('opacity-50'); } 
+                    else { btn.disabled = true; btn.classList.add('opacity-50'); }
                 }
             } else {
                 // LOGGED OUT
                 heroText.classList.remove('opacity-0');
                 statusArea.classList.add('hidden');
-                
                 wrapper.innerHTML = `<button onclick="window.toggleAuthModal()" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-bold text-sm">دخول</button>`;
                 mLogin.classList.remove('hidden');
                 mLogout.classList.add('hidden');
                 adminBtn.classList.add('hidden');
                 mAdmin.classList.add('hidden');
                 loyalty.classList.add('hidden');
+                
+                // Clear inputs
+                if(checkoutName) checkoutName.value = '';
+                if(checkoutPhone) checkoutPhone.value = '';
+                if(checkoutAddress) checkoutAddress.value = '';
             }
         }
 
-        // Dropdown List Logic
         function populateProductDropdown() {
             const select = document.getElementById('quick-product-select');
             select.innerHTML = '<option value="">اختر المنتج...</option>';
-            
             const grp1 = document.createElement('optgroup'); grp1.label = "المنتجات";
             const grp2 = document.createElement('optgroup'); grp2.label = "العروض";
-            
             PRODUCTS_DATA.forEach(p => {
                 const opt = document.createElement('option');
                 opt.value = p.id;
@@ -860,31 +906,23 @@
             if(val) window.quickAdd(val);
         };
 
-        // Scroll Animation
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                }
-            });
+            entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('is-visible'); });
         });
 
-        // Render Init
         const pGrid = document.getElementById('products-grid');
         const oGrid = document.getElementById('offers-grid');
         PRODUCTS_DATA.forEach(p => {
             const h = `<div class="product-card rounded-2xl overflow-hidden cursor-pointer group reveal-on-scroll" onclick="window.openProductPage('${p.id}')">
-                <div class="h-48 bg-gray-700/50 flex items-center justify-center p-4"><img src="${p.img}" class="h-full object-contain" onerror="this.src='https://placehold.co/200?text=Image'"></div>
+                <div class="h-48 bg-gray-700/50 flex items-center justify-center p-4"><img src="${p.img}" loading="lazy" class="h-full object-contain" onerror="this.src='https://placehold.co/200?text=Image'"></div>
                 <div class="p-4"><h3 class="font-bold text-lg text-white mb-2">${p.name}</h3><div class="flex justify-between items-center"><span class="text-teal-400 font-bold">${p.price} ج.م</span><button class="w-8 h-8 rounded-full bg-gray-700 text-white hover:bg-teal-600" onclick="event.stopPropagation(); window.quickAdd('${p.id}')">+</button></div></div>
             </div>`;
             if(p.type === 'offer') oGrid.innerHTML += h; else pGrid.innerHTML += h;
         });
         
-        // Observe elements
         document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
         populateProductDropdown();
 
-        // Auto Login
         const savedPhone = localStorage.getItem('dentleen_user_phone');
         if(savedPhone) {
             if(savedPhone === ADMIN_PHONE) {
